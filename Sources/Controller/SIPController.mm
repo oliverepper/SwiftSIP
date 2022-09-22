@@ -34,6 +34,9 @@ std::vector<Call *> calls;
         cfg.uaConfig.userAgent = [[userAgent copy] cStringUsingEncoding:NSUTF8StringEncoding];
 
         pj::Endpoint::instance().libInit(cfg);
+
+        [self configureOpusWithChannelCount:1 complexity:8 andSampleRate:16000];
+        
         return self;
     }
     return nil;
@@ -180,6 +183,15 @@ std::vector<Call *> calls;
     opus_cfg.sample_rate = 16000;
     pj::Endpoint::instance().setCodecOpusConfig(opus_cfg);
     */
+}
+
+- (void)configureOpusWithChannelCount:(int) channelCount complexity:(int)complexity andSampleRate:(int)sampleRate
+{
+    pj::CodecOpusConfig opusCfg = pj::Endpoint::instance().getCodecOpusConfig();
+    opusCfg.channel_cnt = channelCount;
+    opusCfg.complexity = complexity;
+    opusCfg.sample_rate = sampleRate;
+    pj::Endpoint::instance().setCodecOpusConfig(opusCfg);
 }
 
 @end
