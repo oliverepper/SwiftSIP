@@ -1,4 +1,0 @@
-module Cpjproject {
-    header "shim.h"
-    export *
-}
