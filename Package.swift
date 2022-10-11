@@ -4,8 +4,8 @@ import PackageDescription
 let package = Package(
     name: "SwiftSIP",
     platforms: [
-        .macOS(.v12),
-        .iOS(.v15)
+        .macOS(.v11),
+        .iOS(.v14)
     ],
     products: [
         .library(
