@@ -1,5 +1,4 @@
 import Foundation
-@_exported import Controller
 
 extension pjsip_inv_state: CustomStringConvertible {
     public var description: String {

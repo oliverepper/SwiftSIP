@@ -1,5 +1,5 @@
 import Combine
-import Controller
+@_exported import Controller
 
 public struct SwiftSIP {
     public private(set) var controller = SIPController(userAgent: "✌️")
