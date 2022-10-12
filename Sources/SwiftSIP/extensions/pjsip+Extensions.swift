@@ -15,3 +15,17 @@ extension pjsip_inv_state: CustomStringConvertible {
         }
     }
 }
+
+extension pj_str_t: CustomStringConvertible {
+    public var description: String {
+        UnsafeBufferPointer(start: self.ptr, count: self.slen).withMemoryRebound(to: UInt8.self) {
+            return String(decoding: $0, as: UTF8.self)
+        }
+    }
+}
+
+extension pj_sys_info: CustomStringConvertible {
+    public var description: String {
+        self.info.description
+    }
+}
