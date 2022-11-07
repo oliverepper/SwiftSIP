@@ -12,7 +12,7 @@ let package = Package(
             name: "SwiftSIP", targets: ["SwiftSIP"]),
     ],
     targets: [
-        .binaryTarget(name: "libpjproject", url: "https://github.com/oliverepper/pjproject-apple-platforms/releases/download/0.9/libpjproject.xcframework-0.9.zip", checksum: "f60e3ac30329b22172f7aea16007e81623dddf81941fda29139af1c1b2b15399"),
+        .binaryTarget(name: "libpjproject", url: "https://github.com/oliverepper/pjproject-apple-platforms/releases/download/0.10/libpjproject.xcframework-0.10.zip", checksum: "2e728e891c07d7bd347fa527b655120acb515a361b099e2f543f1ee98ecc448f"),
 //        .binaryTarget(name: "libpjproject", path: "libpjproject.xcframework"),
         .target(name: "Controller", dependencies: ["libpjproject"], cxxSettings: [
             .define("PJ_AUTOCONF")
