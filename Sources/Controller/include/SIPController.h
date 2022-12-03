@@ -10,7 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 @interface SIPController : NSObject
 
 typedef void(^OnIncomingCallCallback)(int);
@@ -31,14 +30,18 @@ typedef NSString * _Nonnull(^PasswordFunction)(void);
 - (void)onIncomingCall:(pjsua_call_id)callId;
 - (void)onCallState:(pjsua_call_id)callId state:(pjsip_inv_state)state;
 
-- (void)answerCall;
-- (void)hangupCall;
-
 - (BOOL)callNumber:(NSString *)number onServer:(NSString *)server error:(NSError **)error;
 
-- (void)testAudio;
+- (void)answerCallWithId:(int)callId;
+- (void)hangupCallWithId:(int)callId;
 
-- (void)dumpCodecs;
+- (void)playDTMF:(NSString *)DTMFDigits;
+
+- (void)testAudio:(int)forSeconds;
+
++ (void)dumpAudioDevices;
+
++ (void)dumpCodecs;
 
 @end
 

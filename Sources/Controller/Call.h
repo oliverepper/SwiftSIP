@@ -19,12 +19,11 @@ public:
     };
 
     virtual void onCallMediaState(pj::OnCallMediaStateParam &prm) {
-        dumpAudioDevices();
+        [SIPController dumpAudioDevices];
         pj::CallInfo ci = getInfo();
         for (unsigned i = 0; i < ci.media.size(); ++i) {
             if (ci.media[i].type == PJMEDIA_TYPE_AUDIO && getMedia(i)) {
                 pj::AudioMedia *aud_med = (pj::AudioMedia *)getMedia(i);
-
                 pj::AudDevManager &mgr = pj::Endpoint::instance().audDevManager();
                 aud_med->startTransmit(mgr.getPlaybackDevMedia());
                 mgr.getCaptureDevMedia().startTransmit(*aud_med);
@@ -34,16 +33,6 @@ public:
 
 private:
     const SIPController *_sipController;
-
-    void dumpAudioDevices() {
-        int count = pjmedia_aud_dev_count();
-        NSLog(@"Found %d audio devices", count);
-        for (pjmedia_aud_dev_index idx = 0; idx < count; ++idx) {
-            pjmedia_aud_dev_info info;
-            pjmedia_aud_dev_get_info(idx, &info);
-            NSLog(@"%d - %s (ins: %d, outs: %d)", idx, info.name, info.input_count, info.output_count);
-        }
-    }
 };
 
 #endif /* Call_h */
