@@ -99,7 +99,7 @@
     cfg.mediaConfig.srtpUse = PJMEDIA_SRTP_OPTIONAL;
     cfg.idUri = [[NSString stringWithFormat:@"%@<sip:%@@%@>", user, user, servername] UTF8String];
     cfg.sipConfig.authCreds.push_back(credInfo);
-    cfg.regConfig.registrarUri = [[NSString stringWithFormat:@"sips:%@;transport=TLS", servername] UTF8String];
+    cfg.regConfig.registrarUri = [[NSString stringWithFormat:@"sip:%@;transport=TLS", servername] UTF8String];
 
     self.account->create(cfg, true);
 
