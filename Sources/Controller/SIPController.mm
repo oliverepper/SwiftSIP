@@ -124,6 +124,13 @@
     NSLog(@"@@@@@ onCallState state: %d", state);
     if (self.onCallStateCallback)
         self.onCallStateCallback(callId, state);
+    if (state == PJSIP_INV_STATE_DISCONNECTED) {
+        const auto& it = std::find_if(_calls.begin(), _calls.end(), [&callId](const Call *call_ptr) {
+            return call_ptr->getId() == callId;
+        });
+        if (it != _calls.end())
+            _calls.erase(it);
+    }
 }
 
 - (BOOL)callNumber:(NSString *)number onServer:(NSString *)server error:(NSError *__autoreleasing  _Nullable *)error
@@ -175,7 +182,7 @@
         pj::CallOpParam prm;
         prm.statusCode = PJSIP_SC_DECLINE;
         (*it)->hangup(prm);
-        _calls.erase(it);
+//        _calls.erase(it);
     }
     NSLog(@"@@@@@ -> %lu", _calls.size());
 }
