@@ -99,7 +99,7 @@
     cfg.mediaConfig.srtpUse = PJMEDIA_SRTP_OPTIONAL;
     cfg.idUri = [[NSString stringWithFormat:@"%@<sip:%@@%@>", user, user, servername] UTF8String];
     cfg.sipConfig.authCreds.push_back(credInfo);
-    cfg.regConfig.registrarUri = [[NSString stringWithFormat:@"sip:%@;transport=TLS", servername] UTF8String];
+    cfg.regConfig.registrarUri = [[NSString stringWithFormat:@"sips:%@;transport=TLS", servername] UTF8String];
 
     self.account->create(cfg, true);
 
@@ -141,7 +141,7 @@
     prm.opt.videoCount = 0;
     try {
         // FIXME: create call and call.makeCall
-        call->makeCall([[NSString stringWithFormat:@"<sip:%@@%@>", number, server] UTF8String], prm);
+        call->makeCall([[NSString stringWithFormat:@"<sip:%@@%@;transport=TLS>", number, server] UTF8String], prm);
     } catch (pj::Error &pjError) {
         if (error) {
             NSString *domain = [[NSString alloc] initWithUTF8String:pjError.title.c_str()];
