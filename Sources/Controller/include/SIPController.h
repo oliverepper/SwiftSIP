@@ -24,6 +24,7 @@ typedef NSString * _Nonnull(^PasswordFunction)(void);
 - (instancetype)initWithUserAgent:(NSString* )userAgent NS_DESIGNATED_INITIALIZER;
 
 - (void)createTransportWithType:(pjsip_transport_type_e)type andPort:(int)port;
+- (void)createTransportUsingSRVLookupWithType:(pjsip_transport_type_e)type;
 - (void)createAccountOnServer:(NSString *)servername forUser:(NSString *)user withPassword:(PasswordFunction)passwordFunction;
 - (void)libStart;
 

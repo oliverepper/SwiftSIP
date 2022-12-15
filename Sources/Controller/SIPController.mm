@@ -38,6 +38,18 @@
 
         pj::Endpoint::instance().libInit(cfg);
 
+        pj::Endpoint::instance().natUpdateStunServers({"stun.t-online.de"}, false);
+
+        pj_dns_resolver *dns_resolver;
+        pjsip_endpt_create_resolver(pjsua_get_pjsip_endpt(), &dns_resolver);
+        pj_str_t pns = pj_str((char *)"217.237.148.22");
+        pj_str_t sns = pj_str((char *)"217.237.150.51");
+        pj_str_t nameservers[] = {pns, sns};
+        pj_dns_resolver_set_ns(dns_resolver, 2, nameservers, 0);
+        pj_status_t success = pjsip_endpt_set_resolver(pjsua_get_pjsip_endpt(), dns_resolver);
+
+        NSLog(@"@@@@@ set_resolver: %d", success);
+
         self.toneGenerator = new pj::ToneGenerator{};
         self.toneGenerator->createToneGenerator();
         self.toneGenerator->startTransmit(pj::Endpoint::instance().audDevManager().getPlaybackDevMedia());
@@ -69,17 +81,23 @@
     pj::Endpoint::instance().transportCreate(type, cfg);
 }
 
+- (void)createTransportUsingSRVLookupWithType:(pjsip_transport_type_e)type
+{
+    [self createTransportWithType:type andPort:0];
+}
+
 - (void)createAccountOnServer:(NSString *)servername forUser:(NSString *)user withPassword:(PasswordFunction)passwordFunction
 {
+    pj::AuthCredInfo credInfo;
+    credInfo.realm = "*";
+    credInfo.username = [user UTF8String];
+    credInfo.data = [passwordFunction() UTF8String];
+
     SIPController *object(self);
     self.account = new Account(object);
     pj::AccountConfig cfg;
     cfg.mediaConfig.srtpUse = PJMEDIA_SRTP_OPTIONAL;
     cfg.idUri = [[NSString stringWithFormat:@"%@<sip:%@@%@>", user, user, servername] UTF8String];
-    pj::AuthCredInfo credInfo;
-    credInfo.realm = "*";
-    credInfo.username = [user UTF8String];
-    credInfo.data = [passwordFunction() UTF8String];
     cfg.sipConfig.authCreds.push_back(credInfo);
     cfg.regConfig.registrarUri = [[NSString stringWithFormat:@"sip:%@;transport=TLS", servername] UTF8String];
 
@@ -103,6 +121,7 @@
 
 - (void)onCallState:(int)callId state:(pjsip_inv_state)state
 {
+    NSLog(@"@@@@@ onCallState state: %d", state);
     if (self.onCallStateCallback)
         self.onCallStateCallback(callId, state);
 }
@@ -115,7 +134,7 @@
     prm.opt.videoCount = 0;
     try {
         // FIXME: create call and call.makeCall
-        call->makeCall([[NSString stringWithFormat:@"<sips:%@@%@>", number, server] UTF8String], prm);
+        call->makeCall([[NSString stringWithFormat:@"<sip:%@@%@>", number, server] UTF8String], prm);
     } catch (pj::Error &pjError) {
         if (error) {
             NSString *domain = [[NSString alloc] initWithUTF8String:pjError.title.c_str()];
@@ -180,6 +199,7 @@
     self.toneGenerator->playDigits(digits);
 
     // FIXME: play DTMF in calls
+    NSLog(@"@@@@@ _calls.size(): %lu", _calls.size());
     for (auto& c : _calls) c->dialDtmf(tones);
 }
 
